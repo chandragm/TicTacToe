@@ -1,7 +1,6 @@
-package in.chandramouligoru.tictactoe.adapter;
+package in.chandramouligoru.tictactoe.view.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ public class GridAdapter extends ArrayAdapter<Piece> {
 
     private LayoutInflater mInflater;
     private List<Piece> board;
-    private Bitmap mAddIcon;
 
     public GridAdapter(Context context, int resource, List<Piece> objects) {
         super(context, resource, objects);
