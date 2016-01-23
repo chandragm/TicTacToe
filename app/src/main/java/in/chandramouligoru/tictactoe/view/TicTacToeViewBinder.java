@@ -131,6 +131,7 @@ public class TicTacToeViewBinder extends ViewBinder<TicTacToeActivity> {
     @Override
     public void startGame() {
         iGamePresenter = mController.getiGamePresenter();
+        updateMatchStats();
         initializeData();
         setupAdapter();
 
