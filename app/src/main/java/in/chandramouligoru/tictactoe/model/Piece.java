@@ -11,7 +11,7 @@ public class Piece {
     public Piece(int row, int col) {
         this.row = row;
         this.column = col;
-        color = Color.Empty.ordinal();
+        color = Color.EMPTY.ordinal();
     }
 
     public int getColor() {
@@ -38,15 +38,15 @@ public class Piece {
         this.column = column;
     }
 
-    public enum Color {Empty, Red, Blue}
+    public enum Color {EMPTY, PLAYER, COMPUTER}
 
     ;
 
-    public enum Check {Row, Column, Diagonal, ReverseDiagonal}
+    public enum Check {ROW, COLUMN, DIAGONAL, REVERSE_DIAGONAL}
 
     ;
 
     public boolean isEmpty() {
-        return this.color == Color.Empty.ordinal();
+        return this.color == Color.EMPTY.ordinal();
     }
 }

@@ -49,7 +49,8 @@ public class TicTacToeActivity extends AppCompatActivity implements ViewControll
 
     @Override
     public void endGame() {
-
+        // TODO: 1/23/16 update the UI and start a new game.
+        mViewBinder.endGame();
     }
 
     @Override

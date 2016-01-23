@@ -14,9 +14,9 @@ public class GameConfig {
 
     public static final String SHARED_PREF_NAME = "tictactoe";
 
+    public static final int GAME_TIE = 0;
     public static final int GAME_WON = 1;
     public static final int GAME_LOST = 2;
-    public static final int GAME_TIE = 0;
 
     public static final String SHARED_PREF_ARG_WON = "won";
     public static final String SHARED_PREF_ARG_LOST = "lost";

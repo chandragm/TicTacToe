@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/holo_blue_dark"
     android:columnCount="3"
-    android:rowCount="3"
-    android:background="@android:color/holo_blue_dark">
+    android:rowCount="3">
 
     <GridView
         android:id="@+id/ttt_board"
@@ -17,4 +17,83 @@
         android:numColumns="3"
         android:verticalSpacing="2dp"
         tools:context=".view.activity.TicTacToeActivity" />
+
+    <LinearLayout
+        android:id="@+id/label_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ttt_board"
+        android:layout_marginLeft="@dimen/dp16"
+        android:layout_marginTop="@dimen/dp30"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/won_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/won"
+            android:textAllCaps="true"
+            android:textStyle="bold|italic" />
+
+
+        <TextView
+            android:id="@+id/lost_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/lost"
+            android:textAllCaps="true"
+            android:textStyle="bold|italic" />
+
+
+        <TextView
+            android:id="@+id/tied_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/tied"
+            android:textAllCaps="true"
+            android:textStyle="bold|italic" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/label_layout"
+        android:layout_marginLeft="@dimen/dp16"
+        android:layout_marginTop="@dimen/dp16"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/won"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@null" />
+
+        <TextView
+            android:id="@+id/lost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@null" />
+
+        <TextView
+            android:id="@+id/tied"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@null" />
+    </LinearLayout>
 </RelativeLayout>

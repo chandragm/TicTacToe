@@ -29,17 +29,20 @@ public class SharedPreferenceManager implements IGameStorageManager {
         switch (matchResult) {
             case GameConfig.GAME_WON:
                 previousState = mSharedPreferences.getInt(GameConfig.SHARED_PREF_ARG_WON, previousState);
-                mEditor.putInt(GameConfig.SHARED_PREF_ARG_WON, previousState++);
+                mEditor.putInt(GameConfig.SHARED_PREF_ARG_WON, ++previousState);
+                mEditor.commit();
                 break;
 
             case GameConfig.GAME_LOST:
                 previousState = mSharedPreferences.getInt(GameConfig.SHARED_PREF_ARG_LOST, previousState);
-                mEditor.putInt(GameConfig.SHARED_PREF_ARG_WON, previousState++);
+                mEditor.putInt(GameConfig.SHARED_PREF_ARG_LOST, ++previousState);
+                mEditor.commit();
                 break;
 
             case GameConfig.GAME_TIE:
                 previousState = mSharedPreferences.getInt(GameConfig.SHARED_PREF_ARG_TIE, previousState);
-                mEditor.putInt(GameConfig.SHARED_PREF_ARG_WON, previousState++);
+                mEditor.putInt(GameConfig.SHARED_PREF_ARG_TIE, ++previousState);
+                mEditor.commit();
                 break;
         }
     }
@@ -49,8 +52,8 @@ public class SharedPreferenceManager implements IGameStorageManager {
         int defaultValue = 0;
         Result result = new Result();
         result.setWon(mSharedPreferences.getInt(GameConfig.SHARED_PREF_ARG_WON, defaultValue));
-        result.setLost(mSharedPreferences.getInt(GameConfig.SHARED_PREF_ARG_WON, defaultValue));
-        result.setTied(mSharedPreferences.getInt(GameConfig.SHARED_PREF_ARG_WON, defaultValue));
+        result.setLost(mSharedPreferences.getInt(GameConfig.SHARED_PREF_ARG_LOST, defaultValue));
+        result.setTied(mSharedPreferences.getInt(GameConfig.SHARED_PREF_ARG_TIE, defaultValue));
 
         return result;
     }

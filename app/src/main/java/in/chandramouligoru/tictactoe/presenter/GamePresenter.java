@@ -7,6 +7,7 @@ import in.chandramouligoru.tictactoe.game.IGamePresenter;
 import in.chandramouligoru.tictactoe.game.IGameView;
 import in.chandramouligoru.tictactoe.interactor.GameInteractor;
 import in.chandramouligoru.tictactoe.model.Piece;
+import in.chandramouligoru.tictactoe.model.Result;
 
 /**
  * Created by chandramouligoru on 1/23/16.
@@ -27,6 +28,14 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public boolean hasWon(List<Piece> board) {
-        return iGameInteractor.hasWon(board);
+        boolean result = iGameInteractor.hasWon(board);
+        if (result)
+            iGameView.endGame();
+        return result;
+    }
+
+    @Override
+    public Result getResults() {
+        return iGameInteractor.getResults();
     }
 }
