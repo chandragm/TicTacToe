@@ -8,6 +8,7 @@ import in.chandramouligoru.tictactoe.game.IGameView;
 import in.chandramouligoru.tictactoe.interactor.GameInteractor;
 import in.chandramouligoru.tictactoe.model.Piece;
 import in.chandramouligoru.tictactoe.model.Result;
+import in.chandramouligoru.tictactoe.model.Winner;
 
 /**
  * Created by chandramouligoru on 1/23/16.
@@ -23,7 +24,9 @@ public class GamePresenter implements IGamePresenter {
     }
 
     @Override
-    public void moveTaken(int position) {
+    public void nextMove(List<Piece> board) {
+        int cyborg = iGameInteractor.nextMove(board);
+        iGameView.makeAMove(cyborg);
     }
 
     @Override
@@ -37,5 +40,20 @@ public class GamePresenter implements IGamePresenter {
     @Override
     public Result getResults() {
         return iGameInteractor.getResults();
+    }
+
+    @Override
+    public Winner getWinner() {
+        return iGameInteractor.getWinner();
+    }
+
+    @Override
+    public void onMoveMade(int position) {
+        iGameInteractor.onMoveMade(position);
+    }
+
+    @Override
+    public void cleanUp() {
+        iGameInteractor.cleanUp();
     }
 }

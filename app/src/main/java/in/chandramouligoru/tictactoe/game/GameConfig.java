@@ -21,4 +21,7 @@ public class GameConfig {
     public static final String SHARED_PREF_ARG_WON = "won";
     public static final String SHARED_PREF_ARG_LOST = "lost";
     public static final String SHARED_PREF_ARG_TIE = "tie";
+
+    public static final int HUMAN = 1;
+    public static final int ANDROID = 2;
 }

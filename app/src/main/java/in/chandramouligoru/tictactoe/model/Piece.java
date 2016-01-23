@@ -38,7 +38,7 @@ public class Piece {
         this.column = column;
     }
 
-    public enum Color {EMPTY, PLAYER, COMPUTER}
+    public enum Color {EMPTY, PLAYER, ANDROID}
 
     ;
 

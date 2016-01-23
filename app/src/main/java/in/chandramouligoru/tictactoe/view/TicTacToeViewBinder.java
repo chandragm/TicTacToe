@@ -1,6 +1,8 @@
 package in.chandramouligoru.tictactoe.view;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,9 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.chandramouligoru.tictactoe.R;
+import in.chandramouligoru.tictactoe.game.GameConfig;
 import in.chandramouligoru.tictactoe.game.IGamePresenter;
 import in.chandramouligoru.tictactoe.model.Piece;
 import in.chandramouligoru.tictactoe.model.Result;
+import in.chandramouligoru.tictactoe.model.Winner;
 import in.chandramouligoru.tictactoe.view.activity.TicTacToeActivity;
 import in.chandramouligoru.tictactoe.view.adapter.GridAdapter;
 
@@ -34,10 +38,12 @@ public class TicTacToeViewBinder extends ViewBinder<TicTacToeActivity> {
     private TextView mLost;
     private TextView mTied;
 
-    private boolean player;
+    private boolean human = true;
+    private Handler mHandler;
 
     public TicTacToeViewBinder(TicTacToeActivity viewController) {
         super(viewController);
+        mHandler = new Handler(Looper.myLooper());
     }
 
     @Override
@@ -57,21 +63,37 @@ public class TicTacToeViewBinder extends ViewBinder<TicTacToeActivity> {
                 if (!move.isEmpty()) {
                     mController.showToast("CELL is not empty");
                 } else {
-                    if (player) {
-                        move.setColor(1);
+                    if (human) {
+                        move.setColor(GameConfig.HUMAN);
+                        mAdapter.updateEntry(position, move);
+                        iGamePresenter.onMoveMade(position);
+                        human = !human;
                     } else {
-                        move.setColor(2);
+                        mController.showToast("Wait for your turn.");
                     }
-                    player = !player;
-                    mAdapter.updateEntry(position, move);
                 }
 
                 if (iGamePresenter.hasWon(mBoard)) {
-                    mController.showToast("GAME Over!");
+                    mController.showToast("GAME Over. " + getWinningMessage(iGamePresenter.getWinner()));
                     return;
+                } else {
+                    if (!human) {
+                        //Ask the computer to make a move.
+                        iGamePresenter.nextMove(mBoard);
+                    }
                 }
             }
         });
+    }
+
+    private String getWinningMessage(Winner winner) {
+        if (winner.getColor() == Piece.Color.PLAYER)
+            return "You WON!";
+
+        if (winner.getColor() == Piece.Color.EMPTY)
+            return "Its a TIE";
+
+        return "You LOST";
     }
 
     public void initializeData() {
@@ -94,6 +116,16 @@ public class TicTacToeViewBinder extends ViewBinder<TicTacToeActivity> {
 
     @Override
     public void makeAMove(int position) {
+        Piece cyborg = mAdapter.getItem(position);
+        cyborg.setColor(GameConfig.ANDROID);
+        mAdapter.updateEntry(position, cyborg);
+        human = !human;
+
+        // TODO: 1/23/16 do it in a better way.
+        if (iGamePresenter.hasWon(mBoard)) {
+            mController.showToast("GAME Over. " + getWinningMessage(iGamePresenter.getWinner()));
+            return;
+        }
     }
 
     @Override
@@ -101,6 +133,11 @@ public class TicTacToeViewBinder extends ViewBinder<TicTacToeActivity> {
         iGamePresenter = mController.getiGamePresenter();
         initializeData();
         setupAdapter();
+
+        if (!human) {
+            //Ask the computer to make a move.
+            iGamePresenter.nextMove(mBoard);
+        }
     }
 
     @Override
@@ -108,17 +145,37 @@ public class TicTacToeViewBinder extends ViewBinder<TicTacToeActivity> {
         //Show game over UI and start over a new game.
         showGameOverUI();
         updateMatchStats();
-        startGame();
+//        iGamePresenter.cleanUp();
+//        startGame();
     }
 
     private void updateMatchStats() {
         Result result = iGamePresenter.getResults();
-        mWon.setText(""+result.getWon());
-        mLost.setText(""+result.getLost());
-        mTied.setText(""+result.getTied());
+        mWon.setText("" + result.getWon());
+        mLost.setText("" + result.getLost());
+        mTied.setText("" + result.getTied());
     }
 
     private void showGameOverUI() {
+        Winner winner = iGamePresenter.getWinner();
+        if (winner.hasAWinner()) {
+            initializeData();
+            String positions = winner.getPositions();
+            for (int i = 0; i < 3; i++) {
+                int position = Integer.parseInt(positions.substring(i, i + 1));
+                Piece piece = mBoard.get(position);
+                piece.setColor(winner.getColor().ordinal());
+                mAdapter.updateEntry(position, piece);
+            }
+        }
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                iGamePresenter.cleanUp();
+                startGame();
+            }
+        }, 1000);
     }
 
     @Override

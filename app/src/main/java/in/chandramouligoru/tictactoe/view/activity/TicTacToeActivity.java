@@ -38,7 +38,7 @@ public class TicTacToeActivity extends AppCompatActivity implements ViewControll
 
     @Override
     public void makeAMove(int position) {
-
+        mViewBinder.makeAMove(position);
     }
 
     @Override
