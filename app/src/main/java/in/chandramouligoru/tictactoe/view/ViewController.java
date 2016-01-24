@@ -7,6 +7,6 @@ import android.app.Activity;
  */
 public interface ViewController {
 
-    public Activity getActivityContext();
+    Activity getActivityContext();
 
 }

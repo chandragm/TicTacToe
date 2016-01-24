@@ -1,4 +1,4 @@
-package in.chandramouligoru.tictactoe.view;
+package in.chandramouligoru.tictactoe.view.viewbinder;
 
 import android.content.Context;
 import android.os.Handler;
@@ -25,6 +25,7 @@ import static in.chandramouligoru.tictactoe.game.GameConfig.NUM_COLS;
 import static in.chandramouligoru.tictactoe.game.GameConfig.NUM_ROWS;
 
 /**
+ * Binds UI to TicTacToeActivity.
  * Created by chandramouligoru on 1/23/16.
  */
 public class TicTacToeViewBinder extends ViewBinder<TicTacToeActivity> {
@@ -87,13 +88,24 @@ public class TicTacToeViewBinder extends ViewBinder<TicTacToeActivity> {
     }
 
     private String getWinningMessage(Winner winner) {
-        if (winner.getColor() == Piece.Color.PLAYER)
+        //winner makes the first move
+        if (winner.getColor() == Piece.Color.PLAYER) {
+            human = true;
             return "You WON!";
+        }
 
-        if (winner.getColor() == Piece.Color.EMPTY)
-            return "Its a TIE";
+        else if (winner.getColor() == Piece.Color.ANDROID) {
+            human = false;
+            return "You LOST";
+        }
 
-        return "You LOST";
+        //Give the last mover another chance in the case of a tie
+        else {
+            human = !human;
+        }
+
+        return "Its a TIE";
+
     }
 
     public void initializeData() {
@@ -146,8 +158,6 @@ public class TicTacToeViewBinder extends ViewBinder<TicTacToeActivity> {
         //Show game over UI and start over a new game.
         showGameOverUI();
         updateMatchStats();
-//        iGamePresenter.cleanUp();
-//        startGame();
     }
 
     private void updateMatchStats() {
@@ -181,6 +191,10 @@ public class TicTacToeViewBinder extends ViewBinder<TicTacToeActivity> {
 
     @Override
     public void destroy() {
+        //relese the reference to Activity
+        mController = null;
+        iGamePresenter.cleanUp();
+        iGamePresenter = null;
     }
 
     @Override

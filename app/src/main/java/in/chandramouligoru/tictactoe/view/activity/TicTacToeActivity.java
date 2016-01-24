@@ -9,8 +9,8 @@ import android.widget.Toast;
 import in.chandramouligoru.tictactoe.game.IGamePresenter;
 import in.chandramouligoru.tictactoe.game.IGameView;
 import in.chandramouligoru.tictactoe.presenter.GamePresenter;
-import in.chandramouligoru.tictactoe.view.TicTacToeViewBinder;
-import in.chandramouligoru.tictactoe.view.ViewBinder;
+import in.chandramouligoru.tictactoe.view.viewbinder.TicTacToeViewBinder;
+import in.chandramouligoru.tictactoe.view.viewbinder.ViewBinder;
 import in.chandramouligoru.tictactoe.view.ViewController;
 
 public class TicTacToeActivity extends AppCompatActivity implements ViewController, IGameView {
@@ -55,7 +55,7 @@ public class TicTacToeActivity extends AppCompatActivity implements ViewControll
 
     @Override
     public void destroy() {
-
+        mViewBinder.destroy();
     }
 
     @Override
@@ -65,5 +65,11 @@ public class TicTacToeActivity extends AppCompatActivity implements ViewControll
 
     public IGamePresenter getiGamePresenter() {
         return iGamePresenter;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        destroy();
     }
 }

@@ -11,6 +11,7 @@ import in.chandramouligoru.tictactoe.model.Result;
 import in.chandramouligoru.tictactoe.model.Winner;
 
 /**
+ * Mediates the flow between the view and the model
  * Created by chandramouligoru on 1/23/16.
  */
 public class GamePresenter implements IGamePresenter {

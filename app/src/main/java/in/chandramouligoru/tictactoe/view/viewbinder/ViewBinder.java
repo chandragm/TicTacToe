@@ -1,8 +1,9 @@
-package in.chandramouligoru.tictactoe.view;
+package in.chandramouligoru.tictactoe.view.viewbinder;
 
 import android.view.View;
 
 import in.chandramouligoru.tictactoe.game.IGameView;
+import in.chandramouligoru.tictactoe.view.ViewController;
 
 /**
  * Created by chandramouligoru on 1/23/16.

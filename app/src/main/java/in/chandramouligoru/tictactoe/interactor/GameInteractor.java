@@ -19,6 +19,7 @@ import static in.chandramouligoru.tictactoe.game.GameConfig.NUM_COLS;
 import static in.chandramouligoru.tictactoe.game.GameConfig.NUM_ROWS;
 
 /**
+ * This class handles all the TicTacToe core logic.
  * Created by chandramouligoru on 1/23/16.
  */
 public class GameInteractor implements IGameInteractor {
@@ -26,19 +27,14 @@ public class GameInteractor implements IGameInteractor {
     private Color[][] grid = new Color[NUM_ROWS][NUM_COLS];
     private IGameStorageManager iGameStorageManager;
 
-    //A very naive but an efficient approach. store the moves made so far in maps
     private int[] corners = {0, 2, 6, 8};
     private int[] edges = {1, 3, 5, 7};
     private int center = 4;
 
     private int previousMove;
-    private int[] playerMoves = new int[9];
-    private int[] androidMoves = new int[9];
     private int[] availableMoves = new int[9];
 
-    private int playerMoveCount;
     private int androidMoveCount;
-
     private int wildCard = -1;
     private Winner mWinner;
 
@@ -181,15 +177,14 @@ public class GameInteractor implements IGameInteractor {
      */
     @Override
     public int nextMove(List<Piece> board) {
-        int move = dumbMove();
-//        if (androidMoveCount == 0)
-//            move = firstMove(board);
-//        else
-//            move = chooseMoveWisely(board);
+        int move /*= dumbMove()*/;
+        if (androidMoveCount == 0)
+            move = firstMove(board);
+        else
+            move = chooseMoveWisely(board);
 
         //Android's move
         androidMoveCount++;
-        androidMoves[move] = 1;
         availableMoves[move] = 0;
         return move;
     }
@@ -206,11 +201,8 @@ public class GameInteractor implements IGameInteractor {
     @Override
     public void cleanUp() {
         previousMove = -1;
-        Arrays.fill(playerMoves, 0);
-        Arrays.fill(androidMoves, 0);
         Arrays.fill(availableMoves, 1);
 
-        playerMoveCount = 0;
         androidMoveCount = 0;
         mWinner.setPositions(null);
         mWinner.setHasAWinner(false);
@@ -220,8 +212,6 @@ public class GameInteractor implements IGameInteractor {
 
     @Override
     public void onMoveMade(int position) {
-        playerMoveCount++;
-        playerMoves[position] = 1;
         availableMoves[position] = 0;
     }
 
@@ -254,11 +244,7 @@ public class GameInteractor implements IGameInteractor {
                 firstMove = center;
             }
         }
-
-        if (availableMoves[firstMove] == 0)
-            return firstMove(board);
-        else
-            return firstMove;
+        return firstMove;
     }
 
     private int chooseMoveWisely(List<Piece> board) {
@@ -266,78 +252,55 @@ public class GameInteractor implements IGameInteractor {
 
         int chooseMove;
 
-        //Cant win here goto block
-        if (androidMoveCount == 1) {
+        //Win
+        chooseMove = hasWinningIndex(colorBoard, Color.ANDROID);
+
+        if (chooseMove == wildCard) {
             //Block
             chooseMove = hasWinningIndex(colorBoard, Color.PLAYER);
-        } else {
-            //Win
-            chooseMove = hasWinningIndex(colorBoard, Color.ANDROID);
         }
 
         if (chooseMove == wildCard) {
-            //Free corner
-            for (int i = 0; i < 4; ++i) {
-                if (availableMoves[corners[i]] == 1) {
-                    chooseMove = corners[i];
-                    break;
-                }
-            }
+            chooseMove = dumbMove();
         }
 
-        if (chooseMove == wildCard) {
-            //Free edges
-            for (int i = 0; i < 4; ++i) {
-                if (availableMoves[edges[i]] == 1) {
-                    chooseMove = edges[i];
-                    break;
-                }
-            }
-        }
-
-        if (chooseMove == wildCard) {
-            for (int i = 0; i < 9; ++i) {
-                if (availableMoves[i] == 1) {
-                    chooseMove = i;
-                    break;
-                }
-            }
-        }
-
-        if (availableMoves[chooseMove] == 0)
-            return chooseMoveWisely(board);
-        else
-            return chooseMove;
+        return chooseMove;
     }
 
-
-    private boolean getIForColor(Color[][] board, int index, int var, Color color, Check check) {
+    private int getMovePosition(int index, int var, Check check) {
         if (check == Check.ROW)
-            return board[index][var] == color || board[index][var] == Color.EMPTY;
+            return calPostionFrom2dArray(index, var);
         else if (check == Check.COLUMN)
-            return board[var][index] == color || board[var][index] == Color.EMPTY;
+            return calPostionFrom2dArray(var, index);
         else if (check == Check.DIAGONAL)
-            return board[var][var] == color || board[var][var] == Color.EMPTY;
+            return calPostionFrom2dArray(var, var);
         else if (check == Check.REVERSE_DIAGONAL)
-            return board[board.length - 1 - var][var] == color
-                    || board[board.length - 1 - var][var] == Color.EMPTY;
-        return false;
+            return calPostionFrom2dArray(NUM_ROWS - 1 - var, var);
+
+        return wildCard;
     }
 
     private int getWinningIndex(Color[][] board, int fixed_index, Color color, Check check) {
-        int movePosition;
+        int movePosition = getMovePosition(fixed_index, 0, check);
         int count = 0;
-        boolean winner = getIForColor(board, fixed_index, 0, color, check);
-        movePosition = calPostionFrom2dArray(fixed_index, 0);
-        if (!winner)
+
+        Color winner = getIthColor(board, fixed_index, 0, check);
+        if (winner == color) {
+            count++;
+        } else if(winner != Color.EMPTY)
             return wildCard;
-        count++;
+        else{
+            movePosition = getMovePosition(fixed_index, 0, check);
+        }
+
         for (int var = 1; var < board.length; var++) {
-            if (!getIForColor(board, fixed_index, var, color, check))
-                return wildCard;
-            else {
+            winner = getIthColor(board, fixed_index, var, check);
+            if (winner == color) {
                 count++;
-                movePosition = calPostionFrom2dArray(fixed_index, var);
+            } else if(winner != Color.EMPTY)
+                return wildCard;
+            else{
+                movePosition = getMovePosition(fixed_index, var, check);
             }
         }
         if (count == 2)
@@ -350,9 +313,6 @@ public class GameInteractor implements IGameInteractor {
         int winner;
         // Check rows and columns
         for (int i = 0; i < NUM_ROWS; i++) {
-//            if (availableMoves[i] == 0)
-//                continue;
-
             winner = getWinningIndex(board, i, color, Check.ROW);
             if (winner != wildCard) {
                 return winner;

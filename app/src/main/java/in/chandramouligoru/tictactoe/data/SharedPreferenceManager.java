@@ -10,6 +10,7 @@ import in.chandramouligoru.tictactoe.game.IGameStorageManager;
 import in.chandramouligoru.tictactoe.model.Result;
 
 /**
+ * An implementation of IGameStorageManager with SharedPreferences
  * Created by chandramouligoru on 1/23/16.
  */
 public class SharedPreferenceManager implements IGameStorageManager {
