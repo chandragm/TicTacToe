@@ -9,5 +9,5 @@ Lessons learnt:
 ToDo:
 
 1. Handle game logic off of UI thread.
-2. Make UI more presentable.
+2. Make UI more presentable and remove absolute dimensions for the Grid.
 3. Make it NxN compatible. UI here is a challenge for small real estate.
