@@ -10,4 +10,4 @@ ToDo:
 
 1. Handle game logic off of UI thread.
 2. Make UI more presentable.
-3. Make it NxN compatible. UI is a challenge for a small real estate.
+3. Make it NxN compatible. UI here is a challenge for small real estate.
